@@ -1,6 +1,6 @@
 class struct( object ):
     def __init__( self, **kwargs ):
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             setattr( self, k, v )
 
 
@@ -353,7 +353,7 @@ def showIm( dlist, v = None, zoom = 1, title = "", nshades = 256, ncols = 1):
             vmin = p1-(p2-p1)/8.0
             vmax = p2+(p2-p1)/8.0
         else:
-            print("Error: range of %s is not recognized." % v)
+            print(("Error: range of %s is not recognized." % v))
             print("       please use a two element tuple or ")
             print("       'auto', 'auto2' or 'auto3'")
             return

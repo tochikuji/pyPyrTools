@@ -58,8 +58,8 @@ class Lpyr(pyramid):
             else:
                 self.height = args[1]
                 if self.height > maxHeight:
-                    print("Error: cannot build pyramid higher than %d levels"
-                          % maxHeight)
+                    print(("Error: cannot build pyramid higher than %d levels"
+                          % maxHeight))
                     return
         else:
             self.height = maxHeight
@@ -173,8 +173,8 @@ class Lpyr(pyramid):
             levs = list(range(0,maxLev))
         else:
             if (levs > maxLev-1).any():
-                print("Error: level numbers must be in the range [0, %d]." % 
-                        (maxLev-1))
+                print(("Error: level numbers must be in the range [0, %d]." % 
+                        (maxLev-1)))
                 return
 
         if isinstance(filt2, str):
@@ -298,10 +298,10 @@ class Lpyr(pyramid):
             stdev = numpy.std(band)
             pRange[nind,:] = numpy.array([av-2*stdev, av+2*stdev])
         elif isinstance(pRange, str):
-            print("Error: band range argument: %s" % (pRange))
+            print(("Error: band range argument: %s" % (pRange)))
             return
         elif pRange.shape[0] == 1 and pRange.shape[1] == 2:
-            scales = numpy.power( numpy.array( range(0,nind) ), scale)
+            scales = numpy.power( numpy.array( list(range(0,nind)) ), scale)
             pRange = numpy.outer( scales, pRange )
             band = self.pyrLow()
             pRange[nind,:] = ( pRange[nind,:] + numpy.mean(band) - 
@@ -349,7 +349,7 @@ class Lpyr(pyramid):
                 llpos[bnum,:] = ctr - numpy.floor(numpy.array(sz))/2.0 
             # make position list positive, and allocate appropriate image
             llpos = llpos - numpy.ones((nind,1))*numpy.min(llpos)
-            pind = range(self.height)
+            pind = list(range(self.height))
             for i in pind:
                 pind[i] = self.band(i).shape
             urpos = llpos + pind

@@ -27,7 +27,7 @@ class SCFpyr(SFpyr):
         max_ht = numpy.floor( numpy.log2( min(self.image.shape) ) ) - 2
         if len(args) > 1:
             if(args[1] > max_ht):
-                print("Error: cannot build pyramid higher than %d levels." % (max_ht))
+                print(("Error: cannot build pyramid higher than %d levels." % (max_ht)))
             ht = args[1]
         else:
             ht = max_ht

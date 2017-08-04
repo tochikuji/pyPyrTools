@@ -25,7 +25,7 @@ class SFpyr(Spyr):
         max_ht = numpy.floor( numpy.log2( min(self.image.shape) ) ) - 2
         if len(args) > 1:
             if(args[1] > max_ht):
-                print("Error: cannot build pyramid higher than %d levels." % (max_ht))
+                print(("Error: cannot build pyramid higher than %d levels." % (max_ht)))
             ht = args[1]
         else:
             ht = max_ht
@@ -201,7 +201,7 @@ class SFpyr(Spyr):
         if isinstance(levs, str) and levs == 'all':
             levs = numpy.array(list(range(maxLev+1)))
         elif isinstance(levs, str):
-            print("Error: %s not valid for levs parameter." % (levs))
+            print(("Error: %s not valid for levs parameter." % (levs)))
             print("levs must be either a 1D numpy array or the string 'all'.")
             return
         else:
@@ -210,7 +210,7 @@ class SFpyr(Spyr):
         if isinstance(bands, str) and bands == 'all':
             bands = numpy.array(list(range(nbands)))
         elif isinstance(bands, str):
-            print("Error: %s not valid for bands parameter." % (bands))
+            print(("Error: %s not valid for bands parameter." % (bands)))
             print("bands must be either a 1D numpy array or the string 'all'.")
             return
         else:
