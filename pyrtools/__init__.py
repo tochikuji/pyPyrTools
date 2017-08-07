@@ -53,7 +53,6 @@ from pyrtools.sp1Filters import sp1Filters
 from pyrtools.sp3Filters import sp3Filters
 from pyrtools.sp5Filters import sp5Filters
 from pyrtools.Spyr import Spyr
-from pyrtools.SpyrMulti import SpyrMulti
 from pyrtools.steer2HarmMtx import steer2HarmMtx
 from pyrtools.steer import steer
 from pyrtools.strictly_decreasing import strictly_decreasing

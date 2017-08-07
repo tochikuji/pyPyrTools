@@ -68,19 +68,19 @@ def steer(*args):
     steervect = numpy.zeros((angle.shape[0], num))
     arg = angle * harmonics[numpy.nonzero(harmonics)[0]].T
     if all(harmonics):
-	steervect[:, list(range(0,num,2))] = numpy.cos(arg)
-	steervect[:, list(range(1,num,2))] = numpy.sin(arg)
+        steervect[:, list(range(0,num,2))] = numpy.cos(arg)
+        steervect[:, list(range(1,num,2))] = numpy.sin(arg)
     else:
-	steervect[:, 1] = numpy.ones((arg.shape[0],1))
-	steervect[:, list(range(0,num,2))] = numpy.cos(arg)
-	steervect[:, list(range(1,num,2))] = numpy.sin(arg)
+        steervect[:, 1] = numpy.ones((arg.shape[0],1))
+        steervect[:, list(range(0,num,2))] = numpy.cos(arg)
+        steervect[:, list(range(1,num,2))] = numpy.sin(arg)
 
     steervect = numpy.dot(steervect,steermtx)
 
     if steervect.shape[0] > 1:
-	tmp = numpy.dot(basis, steervect)
-	res = sum(tmp).T
+        tmp = numpy.dot(basis, steervect)
+        res = sum(tmp).T
     else:
-	res = numpy.dot(basis, steervect.T)
+        res = numpy.dot(basis, steervect.T)
 
     return res
