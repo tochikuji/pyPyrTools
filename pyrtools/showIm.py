@@ -1,10 +1,8 @@
 import numpy
-import ImageTk
-import PIL
+from PIL import Image
 import scipy.stats
-import tkinter
-import math
-from .round import round
+import matplotlib.pyplot as plt
+
 
 def showIm(*args):
     # check and set input parameters
@@ -56,7 +54,7 @@ def showIm(*args):
             imRange = args[1][0], args[1][1]
     else:
         imRange = ( numpy.amin(matrix), numpy.amax(matrix) )
-    
+
     if len(args) > 2:   # zoom entered
         zoom = args[2]
     else:
@@ -69,58 +67,28 @@ def showIm(*args):
 
     if len(args) > 4:   # colormap entered
         nshades = args[4]
+        print("colormap parameter is not supported.")
+        print("Such specification does not make any sense.")
     else:
-        nshades = 256
+        nshades = 256  # NOQA
 
-    # create window
-    #master = Tkinter.Tk()
-    master = tkinter.Toplevel()
-    master.title('showIm')
-    canvas_width = matrix.shape[0] * zoom
-    canvas_height = matrix.shape[1] * zoom
-    master.geometry(str(canvas_width+20) + "x" + str(canvas_height+60) +
-                    "+200+200")
-    # put in top spacer
-    spacer = tkinter.Label(master, text='').pack()
-    
-    # create canvas
-    canvas = tkinter.Canvas(master, width=canvas_width, height=canvas_height)
-    canvas.pack()
-    # shift matrix to 0.0-1.0 then to 0-255
-    if (matrix < 0).any():
-        matrix = matrix + math.fabs(matrix.min())
-    matrix = (matrix / matrix.max()) * 255.0
-    print(matrix.astype('uint8')[0,:])
-    img = PIL.Image.fromarray(matrix.astype('uint8'))
+    # show image
+    # create canvas (mpl)
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_title(label)
 
-    # make colormap
-    colorTable = [0] * 256
-    incr = int(numpy.ceil(float(matrix.max()-matrix.min()+1) / float(nshades)))
-    colors = list(range(int(matrix.min()), int(matrix.max())+1, incr))
-    colors[0] = 0
-    colors[-1] = 255
-    colctr = -1
-    # compute color transition indices
-    thresh = round( (matrix.max() - matrix.min()) / len(colors) )
-    for i in range(len(colorTable)):
-        # handle uneven color boundaries
-        if thresh == 0 or (i % thresh == 0 and colctr < len(colors)-1):
-            colctr += 1
-        colorTable[i] = colors[colctr]
-    img = img.point(colorTable)
+    width = matrix.shape[0] * zoom
+    height = matrix.shape[1] * zoom
+
+    # normalize image to [0, 255]
+    pmin, pmax = matrix.min(), matrix.max()
+    matrix = (matrix - pmin) / (pmax - pmin) * 255
+    img = Image.fromarray(matrix.astype(numpy.uint8))
 
     # zoom
     if zoom != 1:
-        img = img.resize((canvas_width, canvas_height), Image.NEAREST)
+        img.thumbnail((width, height), Image.BICUBIC)
 
-    # apply image to canvas
-    imgPI = ImageTk.PhotoImage(img)    
-    canvas.create_image(0,0, anchor=tkinter.NW, image=imgPI)
-
-    # add labels
-    rangeStr = 'Range: [%.1f, %.1f]' % (imRange[0], imRange[1])
-    rangeLabel = tkinter.Label(master, text=rangeStr).pack()
-    dimsStr = 'Dims: [%d, %d] / %d' % (matrix.shape[0], matrix.shape[1], zoom)
-    dimsLabel = tkinter.Label(master, text=dimsStr).pack()
-    
-    tkinter.mainloop()
+    ax.imshow(img)
+    plt.show()
