@@ -16,6 +16,7 @@ setup(
     author='Eero Simoncelli, Rob Young, Aiga SUZUKI',
     author_email='ai-suzuki@aist.go.jp',
     license='MIT License',
+    packages=['pyrtools'],
     setup_requires=[],
     install_requires=install_requirements,
 )
