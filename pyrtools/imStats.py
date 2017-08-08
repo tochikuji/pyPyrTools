@@ -3,6 +3,7 @@ from .range2 import range2
 from .var2 import var2
 from .kurt2 import kurt2
 
+
 def imStats(*args):
     ''' Report image (matrix) statistics.
         When called on a single image IM1, report min, max, mean, stdev, 
@@ -16,7 +17,7 @@ def imStats(*args):
     elif len(args) == 1 and not numpy.isreal(args[0]).all():
         print('Error: input images must be real-valued matrices')
         return
-    elif len(args) == 2 and ( not numpy.isreal(args[0]).all() or not numpy.isreal(args[1]).all()):
+    elif len(args) == 2 and (not numpy.isreal(args[0]).all() or not numpy.isreal(args[1]).all()):
         print('Error: input images must be real-valued matrices')
         return
     elif len(args) > 2:
@@ -31,7 +32,7 @@ def imStats(*args):
         if v < numpy.finfo(numpy.double).tiny:
             snr = numpy.inf
         else:
-            snr = 10 * numpy.log10(var2(args[0])/v)
+            snr = 10 * numpy.log10(var2(args[0]) / v)
         print('Difference statistics:')
         print('  Range: [%d, %d]' % (mn, mx))
         print('  Mean: %f,  Stdev (rmse): %f,  SNR (dB): %f' % (mean,

@@ -1,8 +1,9 @@
 import numpy
 
+
 def mkGaussian(*args):
     ''' IM = mkGaussian(SIZE, COVARIANCE, MEAN, AMPLITUDE)
- 
+
         Compute a matrix with dimensions SIZE (a [Y X] 2-vector, or a
         scalar) containing a Gaussian function, centered at pixel position
         specified by MEAN (default = (size+1)/2), with given COVARIANCE (can
@@ -37,7 +38,7 @@ def mkGaussian(*args):
         if isinstance(mn, int):
             mn = [mn, mn]
     else:
-        mn = ( (sz[0]+1.0)/2.0, (sz[1]+1.0)/2.0 )
+        mn = ((sz[0] + 1.0) / 2.0, (sz[1] + 1.0) / 2.0)
 
     if len(args) > 3:
         ampl = args[3]
@@ -45,22 +46,22 @@ def mkGaussian(*args):
         ampl = 'norm'
 
     #---------------------------------------------------------------
-        
-    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-mn[1], 
-                                    numpy.array(list(range(1,sz[0]+1)))-mn[0])
+
+    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1, sz[1] + 1))) - mn[1],
+                                    numpy.array(list(range(1, sz[0] + 1))) - mn[0])
 
     if isinstance(cov, (int, float)):
         if 'norm' == ampl:
             ampl = 1.0 / (2.0 * numpy.pi * cov)
-        e = ( (xramp**2) + (yramp**2) ) / ( -2.0 * cov )
+        e = ((xramp**2) + (yramp**2)) / (-2.0 * cov)
     elif len(cov) == 2 and isinstance(cov[0], (int, float)):
         if 'norm' == ampl:
-            if cov[0]*cov[1] < 0:
-                ampl = 1.0 / (2.0 * numpy.pi * 
+            if cov[0] * cov[1] < 0:
+                ampl = 1.0 / (2.0 * numpy.pi *
                               numpy.sqrt(complex(cov[0] * cov[1])))
             else:
                 ampl = 1.0 / (2.0 * numpy.pi * numpy.sqrt(cov[0] * cov[1]))
-        e = ( (xramp**2) / (-2 * cov[1]) ) + ( (yramp**2) / (-2 * cov[0]) )
+        e = ((xramp**2) / (-2 * cov[1])) + ((yramp**2) / (-2 * cov[0]))
     else:
         if 'norm' == ampl:
             detCov = numpy.linalg.det(cov)
@@ -68,13 +69,14 @@ def mkGaussian(*args):
                 detCovComplex = numpy.empty(detCov.shape, dtype=complex)
                 detCovComplex.real = detCov
                 detCovComplex.imag = numpy.zeros(detCov.shape)
-                ampl = 1.0 / ( 2.0 * numpy.pi * numpy.sqrt( detCovComplex ) )
+                ampl = 1.0 / (2.0 * numpy.pi * numpy.sqrt(detCovComplex))
             else:
-                ampl = 1.0 / (2.0 * numpy.pi * numpy.sqrt( numpy.linalg.det(cov) ) )
+                ampl = 1.0 / (2.0 * numpy.pi *
+                              numpy.sqrt(numpy.linalg.det(cov)))
         cov = - numpy.linalg.inv(cov) / 2.0
-        e = (cov[1,1] * xramp**2) + ( 
-            (cov[0,1]+cov[1,0])*(xramp*yramp) ) + ( cov[0,0] * yramp**2)
-        
+        e = (cov[1, 1] * xramp**2) + (
+            (cov[0, 1] + cov[1, 0]) * (xramp * yramp)) + (cov[0, 0] * yramp**2)
+
     res = ampl * numpy.exp(e)
-    
+
     return res

@@ -2,6 +2,7 @@ import numpy
 from .namedFilter import namedFilter
 from .corrDn import corrDn
 
+
 def blurDn(*args):
     ''' RES = blurDn(IM, LEVELS, FILT)
         Blur and downsample an image.  The blurring is done with filter
@@ -19,7 +20,7 @@ def blurDn(*args):
         return
 
     im = numpy.array(args[0])
-    
+
     # optional args
     if len(args) > 1:
         nlevs = args[1]
@@ -34,19 +35,19 @@ def blurDn(*args):
         filt = namedFilter('binom5')
 
     if filt.shape[0] == 1 or filt.shape[1] == 1:
-        filt = [x/sum(filt) for x in filt]
+        filt = [x / sum(filt) for x in filt]
     else:
-        filt = [x/sum(sum(filt)) for x in filt]
+        filt = [x / sum(sum(filt)) for x in filt]
 
     filt = numpy.array(filt)
-    
+
     if nlevs > 1:
-        im = blurDn(im, nlevs-1, filt)
+        im = blurDn(im, nlevs - 1, filt)
 
     if nlevs >= 1:
         if len(im.shape) == 1 or im.shape[0] == 1 or im.shape[1] == 1:
             # 1D image
-            if len(filt.shape) > 1 and (filt.shape[1]!=1 and filt.shape[2]!=1):
+            if len(filt.shape) > 1 and (filt.shape[1] != 1 and filt.shape[2] != 1):
                 # >1D filter
                 print('Error: Cannot apply 2D filter to 1D signal')
                 return
@@ -57,20 +58,20 @@ def blurDn(*args):
             else:
                 if filt.shape[0] == 1:
                     filt = filt.T
-                
-            res = corrDn(image = im, filt = filt, step = (2, 2))
+
+            res = corrDn(image=im, filt=filt, step=(2, 2))
             if len(im.shape) == 1 or im.shape[1] == 1:
-                res = numpy.reshape(res, (numpy.ceil(im.shape[0]/2.0), 1))
+                res = numpy.reshape(res, (numpy.ceil(im.shape[0] / 2.0), 1))
             else:
-                res = numpy.reshape(res, (1, numpy.ceil(im.shape[1]/2.0)))
+                res = numpy.reshape(res, (1, numpy.ceil(im.shape[1] / 2.0)))
         elif len(filt.shape) == 1 or filt.shape[0] == 1 or filt.shape[1] == 1:
             # 2D image and 1D filter
-            res = corrDn(image = im, filt = filt.T, step = (2, 1))
-            res = corrDn(image = res, filt = filt, step = (1, 2))
+            res = corrDn(image=im, filt=filt.T, step=(2, 1))
+            res = corrDn(image=res, filt=filt, step=(1, 2))
 
         else:  # 2D image and 2D filter
-            res = corrDn(image = im, filt = filt, step = (2,2))
+            res = corrDn(image=im, filt=filt, step=(2, 2))
     else:
         res = im
-            
+
     return res

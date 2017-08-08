@@ -1,5 +1,6 @@
 import numpy
 
+
 def steer2HarmMtx(*args):
     ''' Compute a steering matrix (maps a directional basis set onto the
         angular Fourier harmonics).  HARMONICS is a vector specifying the
@@ -13,17 +14,17 @@ def steer2HarmMtx(*args):
     if len(args) == 0:
         print("Error: first parameter 'harmonics' is required.")
         return
-    
+
     if len(args) > 0:
         harmonics = numpy.array(args[0])
 
     # optional parameters
-    numh = (2*harmonics.shape[0]) - (harmonics == 0).sum()
+    numh = (2 * harmonics.shape[0]) - (harmonics == 0).sum()
     if len(args) > 1:
         angles = args[1]
     else:
         angles = numpy.pi * numpy.array(list(range(numh))) / numh
-        
+
     if len(args) > 2:
         if isinstance(args[2], str):
             if args[2] == 'even' or args[2] == 'EVEN':
@@ -31,14 +32,15 @@ def steer2HarmMtx(*args):
             elif args[2] == 'odd' or args[2] == 'ODD':
                 evenorodd = 1
             else:
-                print("Error: only 'even' and 'odd' are valid entries for the third input parameter.")
+                print(
+                    "Error: only 'even' and 'odd' are valid entries for the third input parameter.")
                 return
         else:
             print("Error: third input parameter must be a string (even/odd).")
     else:
         evenorodd = 0
 
-    # Compute inverse matrix, which maps to Fourier components onto 
+    # Compute inverse matrix, which maps to Fourier components onto
     #   steerable basis
     imtx = numpy.zeros((angles.shape[0], numh))
     col = 0
@@ -49,11 +51,11 @@ def steer2HarmMtx(*args):
             col += 1
         elif evenorodd:
             imtx[:, col] = numpy.sin(args)
-            imtx[:, col+1] = numpy.negative( numpy.cos(args) )
+            imtx[:, col + 1] = numpy.negative(numpy.cos(args))
             col += 2
         else:
             imtx[:, col] = numpy.cos(args)
-            imtx[:, col+1] = numpy.sin(args)
+            imtx[:, col + 1] = numpy.sin(args)
             col += 2
 
     r = numpy.linalg.matrix_rank(imtx)
@@ -61,5 +63,5 @@ def steer2HarmMtx(*args):
         print("Warning: matrix is not full rank")
 
     mtx = numpy.linalg.pinv(imtx)
-    
+
     return mtx

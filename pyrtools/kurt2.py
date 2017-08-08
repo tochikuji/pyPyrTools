@@ -1,5 +1,6 @@
 import numpy
 
+
 def kurt2(*args):
     ''' Sample kurtosis (fourth moment divided by squared variance) 
         of a matrix.  Kurtosis of a Gaussian distribution is 3.
@@ -19,9 +20,9 @@ def kurt2(*args):
         v = args[2]
 
     if numpy.isreal(args[0]).all():
-        res = (numpy.abs(args[0]-mn)**4).mean() / v**2
+        res = (numpy.abs(args[0] - mn)**4).mean() / v**2
     else:
-        res = ( (((args[0]-mn).real**4).mean() / v.real**2) + 
-                ((numpy.i * (args[0]-mn).imag**4).mean() / v.imag**2) )
+        res = ((((args[0] - mn).real**4).mean() / v.real**2) +
+               ((numpy.i * (args[0] - mn).imag**4).mean() / v.imag**2))
 
     return res

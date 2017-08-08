@@ -2,6 +2,7 @@ import numpy
 from .mkR import mkR
 from .var2 import var2
 
+
 def mkFract(*args):
     ''' Make a matrix of dimensions SIZE (a [Y X] 2-vector, or a scalar)
         containing fractal (pink) noise with power spectral density of the
@@ -33,10 +34,11 @@ def mkFract(*args):
     fres = numpy.fft.fft2(res)
 
     sz = res.shape
-    ctr = (int(numpy.ceil((sz[0]+1)/2.0)), int(numpy.ceil((sz[1]+1)/2.0)))
+    ctr = (int(numpy.ceil((sz[0] + 1) / 2.0)),
+           int(numpy.ceil((sz[1] + 1) / 2.0)))
 
-    sh = numpy.fft.ifftshift(mkR(sz, -(2.5-fract_dim), ctr))
-    sh[0,0] = 1;  #DC term
+    sh = numpy.fft.ifftshift(mkR(sz, -(2.5 - fract_dim), ctr))
+    sh[0, 0] = 1  # DC term
 
     fres = sh * fres
     fres = numpy.fft.ifft2(fres)
