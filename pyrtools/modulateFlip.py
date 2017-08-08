@@ -1,5 +1,6 @@
 import numpy
 
+
 def modulateFlip(*args):
     ''' [HFILT] = modulateFlipShift(LFILT)
         QMF/Wavelet highpass filter construction: modulate by (-1)^n,
@@ -22,11 +23,11 @@ def modulateFlip(*args):
         return
 
     sz = len(lfilt)
-    sz2 = numpy.ceil(sz/2.0);
+    sz2 = numpy.ceil(sz / 2.0)
 
-    ind = numpy.array(list(range(sz-1,-1,-1)))
+    ind = numpy.array(list(range(sz - 1, -1, -1)))
 
-    hfilt = lfilt[ind].T * (-1)**((ind+1)-sz2)
+    hfilt = lfilt[ind].T * (-1)**((ind + 1) - sz2)
 
     # matlab version always returns a column vector
     if len(hfilt.shape) == 1:

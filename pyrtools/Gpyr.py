@@ -30,9 +30,9 @@ class Gpyr(Lpyr):
             print("no filter set, so filter is binom5")
             filt = namedFilter('binom5')
             if self.image.shape[0] == 1:
-                filt = filt.reshape(1,5)
+                filt = filt.reshape(1, 5)
             else:
-                filt = filt.reshape(5,1)
+                filt = filt.reshape(5, 1)
 
         maxHeight = 1 + maxPyrHt(self.image.shape, filt.shape)
 
@@ -42,8 +42,8 @@ class Gpyr(Lpyr):
             else:
                 self.height = args[1]
                 if self.height > maxHeight:
-                    print(( "Error: cannot build pyramid higher than %d levels"
-                            % (maxHeight) ))
+                    print(("Error: cannot build pyramid higher than %d levels"
+                           % (maxHeight)))
                     return
         else:
             self.height = maxHeight
@@ -66,22 +66,22 @@ class Gpyr(Lpyr):
         self.pyrSize.append(im.shape)
         pyrCtr += 1
 
-        for ht in range(self.height-1,0,-1):
+        for ht in range(self.height - 1, 0, -1):
             im_sz = im.shape
             filt_sz = filt.shape
             if im_sz[0] == 1:
-                lo2 = corrDn(image = im, filt = filt, step = (1,2))
+                lo2 = corrDn(image=im, filt=filt, step=(1, 2))
                 #lo2 = numpy.array(lo2)
             elif len(im_sz) == 1 or im_sz[1] == 1:
-                lo2 = corrDn(image = im, filt = filt, step = (2,1))
+                lo2 = corrDn(image=im, filt=filt, step=(2, 1))
                 #lo2 = numpy.array(lo2)
             else:
-                lo = corrDn(image = im, filt = filt.T, step = (1,2),
-                            start = (0,0))
+                lo = corrDn(image=im, filt=filt.T, step=(1, 2),
+                            start=(0, 0))
                 #lo = numpy.array(lo)
-                lo2 = corrDn(image = lo, filt = filt, step = (2,1),
-                             start = (0,0))
-                #lo2 = numpy.array(lo2)                
+                lo2 = corrDn(image=lo, filt=filt, step=(2, 1),
+                             start=(0, 0))
+                #lo2 = numpy.array(lo2)
 
             self.pyr.append(lo2.copy())
             self.pyrSize.append(lo2.shape)

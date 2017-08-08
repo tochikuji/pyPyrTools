@@ -1,5 +1,6 @@
 import numpy
 
+
 def range2(*args):
     ''' compute minimum and maximum values of input matrix, returning them 
         as tuple  '''

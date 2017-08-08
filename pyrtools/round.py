@@ -1,6 +1,7 @@
 import numpy
 from .roundVal import roundVal
 
+
 def round(arr):
     ''' round equivalent to matlab function
         used in histo so we can unit test against matlab code

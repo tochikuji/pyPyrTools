@@ -1,9 +1,10 @@
 import numpy
 from .mkR import mkR
 
+
 def mkZonePlate(*args):
     ''' IM = mkZonePlate(SIZE, AMPL, PHASE)
-    
+
         Make a "zone plate" image:
             AMPL * cos( r^2 + PHASE)
             SIZE specifies the matrix size, as for zeros().  
@@ -24,7 +25,7 @@ def mkZonePlate(*args):
         elif not isinstance(sz, (tuple)):
             print("first argument must be a two element tuple or an integer")
             exit(1)
-    
+
     #---------------------------------------------------------------------
     # OPTIONAL ARGS
     if len(args) > 1:
@@ -38,6 +39,6 @@ def mkZonePlate(*args):
 
     #---------------------------------------------------------------------
 
-    res = ampl * numpy.cos( (numpy.pi / max(sz)) * mkR(sz, 2) + ph )
+    res = ampl * numpy.cos((numpy.pi / max(sz)) * mkR(sz, 2) + ph)
 
     return res

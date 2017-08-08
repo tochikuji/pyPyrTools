@@ -1,5 +1,6 @@
 import numpy
 
+
 def mkAngle(*args):
     ''' Compute a matrix of dimension SIZE (a [Y X] 2-vector, or a scalar)
         containing samples of the polar angle (in radians, CW from the
@@ -26,18 +27,18 @@ def mkAngle(*args):
     if len(args) > 2:
         origin = args[2]
     else:
-        origin = (sz[0]+1/2, sz[1]+1/2)
+        origin = (sz[0] + 1 / 2, sz[1] + 1 / 2)
 
     #------------------------------------------------------------------
 
-    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-origin[1], 
-                                 (numpy.array(list(range(1,sz[0]+1))))-origin[0])
+    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1, sz[1] + 1))) - origin[1],
+                                    (numpy.array(list(range(1, sz[0] + 1)))) - origin[0])
     xramp = numpy.array(xramp)
     yramp = numpy.array(yramp)
 
     res = numpy.arctan2(yramp, xramp)
-    
+
     if phase != 'not set':
-        res = ((res+(numpy.pi-phase)) % (2*numpy.pi)) - numpy.pi
+        res = ((res + (numpy.pi - phase)) % (2 * numpy.pi)) - numpy.pi
 
     return res
