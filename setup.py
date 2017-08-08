@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+import subprocess
+
 from setuptools import setup
 from setuptools.command.build_py import build_py
-import subprocess
 
 
 class BuildSO(build_py):
@@ -22,9 +23,9 @@ install_requirements = [
 
 setup(
     name='pyrtools',
-    version='0.0.1',
+    version='0.1.0',
     description="tools for multi-scale image processing",
-    author='Eero Simoncelli, Rob Young, Aiga SUZUKI',
+    author='Rob Young, Eero Simoncelli, Aiga SUZUKI',
     author_email='ai-suzuki@aist.go.jp',
     license='MIT License',
     packages=['pyrtools'],
