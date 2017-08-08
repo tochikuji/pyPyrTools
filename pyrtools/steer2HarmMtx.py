@@ -56,7 +56,7 @@ def steer2HarmMtx(*args):
             imtx[:, col+1] = numpy.sin(args)
             col += 2
 
-    r = numpy.rank(imtx)
+    r = numpy.linalg.matrix_rank(imtx)
     if r != numh and r != angles.shape[0]:
         print("Warning: matrix is not full rank")
 
