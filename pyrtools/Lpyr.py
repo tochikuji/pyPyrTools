@@ -349,10 +349,11 @@ class Lpyr(pyramid):
                 llpos[bnum,:] = ctr - numpy.floor(numpy.array(sz))/2.0 
             # make position list positive, and allocate appropriate image
             llpos = llpos - numpy.ones((nind,1))*numpy.min(llpos)
+            llpos = llpos.astype(numpy.int32)
             pind = list(range(self.height))
             for i in pind:
                 pind[i] = self.band(i).shape
-            urpos = llpos + pind
+            urpos = (llpos + pind).astype(numpy.int32)
             d_im = numpy.ones((numpy.max(urpos), numpy.max(urpos))) * 255
             
             # paste bands into image, (im-r1)*(nshades-1)/(r2-r1) + 1.5
