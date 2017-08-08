@@ -1,6 +1,7 @@
 import numpy
 import math
 
+
 def mkRamp(*args):
     ''' mkRamp(SIZE, DIRECTION, SLOPE, INTERCEPT, ORIGIN)
         Compute a matrix of dimension SIZE (a [Y X] 2-vector, or a scalar)
@@ -9,7 +10,7 @@ def mkRamp(*args):
         1), and a value of INTERCEPT (default = 0) at the ORIGIN (default =
         (size+1)/2, [1 1] = upper left). All but the first argument are
         optional '''
-    
+
     if len(args) == 0:
         print("mkRamp(SIZE, DIRECTION, SLOPE, INTERCEPT, ORIGIN)")
         print("first argument is required")
@@ -42,15 +43,15 @@ def mkRamp(*args):
     if len(args) > 4:
         origin = args[4]
     else:
-        origin = ( float(sz[0]-1)/2.0, float(sz[1]-1)/2.0 )
+        origin = (float(sz[0] - 1) / 2.0, float(sz[1] - 1) / 2.0)
 
     #--------------------------
 
     xinc = slope * math.cos(direction)
     yinc = slope * math.sin(direction)
 
-    [xramp, yramp] = numpy.meshgrid( xinc * (numpy.array(list(range(sz[1])))-origin[1]),
-                                  yinc * (numpy.array(list(range(sz[0])))-origin[0]) )
+    [xramp, yramp] = numpy.meshgrid(xinc * (numpy.array(list(range(sz[1]))) - origin[1]),
+                                    yinc * (numpy.array(list(range(sz[0]))) - origin[0]))
 
     res = intercept + xramp + yramp
 

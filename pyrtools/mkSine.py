@@ -2,17 +2,18 @@ import numpy
 import math
 from .mkRamp import mkRamp
 
+
 def mkSine(*args):
     ''' IM = mkSine(SIZE, PERIOD, DIRECTION, AMPLITUDE, PHASE, ORIGIN)
                            or
         IM = mkSine(SIZE, FREQ, AMPLITUDE, PHASE, ORIGIN)
- 
+
         Compute a matrix of dimension SIZE (a [Y X] 2-vector, or a scalar)
         containing samples of a 2D sinusoid, with given PERIOD (in pixels),
         DIRECTION (radians, CW from X-axis, default = 0), AMPLITUDE (default
         = 1), and PHASE (radians, relative to ORIGIN, default = 0).  ORIGIN
         defaults to the center of the image.
- 
+
         In the second form, FREQ is a 2-vector of frequencies (radians/pixel).
 
         Eero Simoncelli, 6/96. Python version by Rob Young, 7/15.  '''
@@ -74,7 +75,7 @@ def mkSine(*args):
     if origin == 'not set':
         res = amplitude * numpy.sin(mkRamp(sz, direction, frequency, phase))
     else:
-        res = amplitude * numpy.sin(mkRamp(sz, direction, frequency, phase, 
-                                           [origin[0]-1, origin[1]-1]))
+        res = amplitude * numpy.sin(mkRamp(sz, direction, frequency, phase,
+                                           [origin[0] - 1, origin[1] - 1]))
 
     return res

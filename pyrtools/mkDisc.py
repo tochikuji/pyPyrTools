@@ -4,6 +4,7 @@ from .mkR import mkR
 from .rcosFn import rcosFn
 from .pointOp import pointOp
 
+
 def mkDisc(*args):
     ''' IM = mkDisc(SIZE, RADIUS, ORIGIN, TWIDTH, VALS)
 
@@ -39,26 +40,26 @@ def mkDisc(*args):
     if len(args) > 2:
         origin = args[2]
     else:
-        origin = ( (sz[0]+1.0)/2.0, (sz[1]+1.0)/2.0 )
+        origin = ((sz[0] + 1.0) / 2.0, (sz[1] + 1.0) / 2.0)
 
     if len(args) > 3:
         twidth = args[3]
     else:
         twidth = twidth = 2
-        
+
     if len(args) > 4:
         vals = args[4]
     else:
-        vals = (1,0)
+        vals = (1, 0)
 
     #--------------------------------------------------------------
 
     res = mkR(sz, 1, origin)
 
     if abs(twidth) < sys.float_info.min:
-        res = vals[1] + (vals[0] - vals[1]) * (res <= rad);
+        res = vals[1] + (vals[0] - vals[1]) * (res <= rad)
     else:
-        [Xtbl, Ytbl] = rcosFn(twidth, rad, [vals[0], vals[1]]);
-        res = pointOp(res, Ytbl, Xtbl[0], Xtbl[1]-Xtbl[0], 0);
+        [Xtbl, Ytbl] = rcosFn(twidth, rad, [vals[0], vals[1]])
+        res = pointOp(res, Ytbl, Xtbl[0], Xtbl[1] - Xtbl[0], 0)
 
     return numpy.array(res)

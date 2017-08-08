@@ -19,11 +19,11 @@ def showIm(*args):
         print("  zoom specifies the number of matrix samples per screen pixel.")
         print("    It will be rounded to an integer, or 1 divided by an ")
         print("    integer.")
-        #print "    A value of 'same' or 'auto' (default) causes the "
-        #print "    zoom value to be chosen automatically to fit the image into"
-        #print "    the current axes."
-        #print "    A value of 'full' fills the axis region "
-        #print "    (leaving no room for labels)."
+        # print "    A value of 'same' or 'auto' (default) causes the "
+        # print "    zoom value to be chosen automatically to fit the image into"
+        # print "    the current axes."
+        # print "    A value of 'full' fills the axis region "
+        # print "    (leaving no room for labels)."
         print("  label - A string that is used as a figure title.")
         print("  NSHADES (optional) specifies the number of gray shades, ")
         print("    and defaults to the size of the current colormap. ")
@@ -34,16 +34,16 @@ def showIm(*args):
     if len(args) > 1:   # range entered
         if isinstance(args[1], str):
             if args[1] is "auto":
-                imRange = ( numpy.amin(matrix), numpy.amax(matrix) )
+                imRange = (numpy.amin(matrix), numpy.amax(matrix))
             elif args[1] is "auto2":
-                imRange = ( matrix.mean()-2*matrix.std(), 
-                            matrix.mean()+2*matrix.std() )
+                imRange = (matrix.mean() - 2 * matrix.std(),
+                           matrix.mean() + 2 * matrix.std())
             elif args[1] is "auto3":
-                #p1 = numpy.percentile(matrix, 10)  not in python 2.6.6?!
+                # p1 = numpy.percentile(matrix, 10)  not in python 2.6.6?!
                 #p2 = numpy.percentile(matrix, 90)
                 p1 = scipy.stats.scoreatpercentile(numpy.hstack(matrix), 10)
                 p2 = scipy.stats.scoreatpercentile(numpy.hstack(matrix), 90)
-                imRange = (p1-(p2-p1)/8.0, p2+(p2-p1)/8.0)
+                imRange = (p1 - (p2 - p1) / 8.0, p2 + (p2 - p1) / 8.0)
             else:
                 print("Error: range of %s is not recognized." % args[1])
                 print("       please use a two element tuple or ")
@@ -53,7 +53,7 @@ def showIm(*args):
         else:
             imRange = args[1][0], args[1][1]
     else:
-        imRange = ( numpy.amin(matrix), numpy.amax(matrix) )
+        imRange = (numpy.amin(matrix), numpy.amax(matrix))
 
     if len(args) > 2:   # zoom entered
         zoom = args[2]

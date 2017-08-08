@@ -1,5 +1,6 @@
 import numpy
 
+
 def maxPyrHt(imsz, filtsz):
     ''' Compute maximum pyramid height for given image and filter sizes.
         Specifically: the number of corrDn operations that can be sequentially
@@ -13,9 +14,9 @@ def maxPyrHt(imsz, filtsz):
             imsz = (imsz[0], 1)
         if len(filtsz) == 1:
             filtsz = (filtsz[0], 1)
-        #if filtsz[1] == 1:  # new
+        # if filtsz[1] == 1:  # new
         #    filtsz = (filtsz[1], filtsz[0])
-        #if imsz[0] < filtsz[0] or imsz[1] < filtsz[1]:
+        # if imsz[0] < filtsz[0] or imsz[1] < filtsz[1]:
         #    print 'flag 2'
         #    return 0
 
@@ -29,26 +30,25 @@ def maxPyrHt(imsz, filtsz):
         filtsz = filtsz[0] * filtsz[1]
         if imsz < filtsz:
             return 0
-    #elif 1 in filtsz:   # 2D image, 1D filter
+    # elif 1 in filtsz:   # 2D image, 1D filter
     else:   # 2D image
         #filtsz = (filtsz[0], filtsz[0])
-        #print filtsz
-        if ( imsz[0] < filtsz[0] or imsz[0] < filtsz[1] or
-             imsz[1] < filtsz[0] or imsz[1] < filtsz[1] ):
+        # print filtsz
+        if (imsz[0] < filtsz[0] or imsz[0] < filtsz[1] or
+                imsz[1] < filtsz[0] or imsz[1] < filtsz[1]):
             return 0
 
-    if ( not isinstance(imsz, tuple) and not isinstance(filtsz, tuple) and
-         imsz < filtsz ) :
+    if (not isinstance(imsz, tuple) and not isinstance(filtsz, tuple) and
+            imsz < filtsz):
         height = 0
     elif not isinstance(imsz, tuple) and not isinstance(filtsz, tuple):
-        height = 1 + maxPyrHt( numpy.floor(imsz/2.0), filtsz )
+        height = 1 + maxPyrHt(numpy.floor(imsz / 2.0), filtsz)
     else:
-        height = 1 + maxPyrHt( (numpy.floor(imsz[0]/2.0), 
-                                numpy.floor(imsz[1]/2.0)), 
-                               filtsz )
+        height = 1 + maxPyrHt((numpy.floor(imsz[0] / 2.0),
+                               numpy.floor(imsz[1] / 2.0)),
+                              filtsz)
 
     return height
-
 
 
 ''' new - probably not needed    
@@ -120,5 +120,3 @@ def maxPyrHt(imsz, filtsz):
         
     return height
 '''
-
-

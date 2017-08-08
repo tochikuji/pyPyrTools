@@ -1,6 +1,7 @@
 import numpy
 from .mkAngle import mkAngle
 
+
 def mkAngularSine(*args):
     ''' IM = mkAngularSine(SIZE, HARMONIC, AMPL, PHASE, ORIGIN)
 
@@ -9,7 +10,7 @@ def mkAngularSine(*args):
         where theta is the angle about the origin.
         SIZE specifies the matrix size, as for zeros().  
         AMPL (default = 1) and PHASE (default = 0) are optional.
-    
+
         Eero Simoncelli, 2/97.  Python port by Rob Young, 7/15.  '''
 
     if len(args) == 0:
@@ -44,8 +45,8 @@ def mkAngularSine(*args):
     if len(args) > 4:
         origin = args[4]
     else:
-        origin = ( (sz[0]+1.0)/2.0, (sz[1]+1.0)/2.0 )
-        
-    res = ampl * numpy.sin( harmonic * mkAngle(sz, ph, origin) + ph )
+        origin = ((sz[0] + 1.0) / 2.0, (sz[1] + 1.0) / 2.0)
+
+    res = ampl * numpy.sin(harmonic * mkAngle(sz, ph, origin) + ph)
 
     return res

@@ -1,6 +1,7 @@
 import numpy
 from .var2 import var2
 
+
 def skew2(*args):
     ''' Sample skew (third moment divided by variance^3/2) of a matrix.
         MEAN (optional) and VAR (optional) make the computation faster.  '''
@@ -22,9 +23,9 @@ def skew2(*args):
         v = var2(mtx, mn)
 
     if isinstance(mtx, complex):
-        res = ( ( ((mtx.real - mn.real)**3).mean() / (v.real**(3.0/2.0)) ) +
-                ( (1j * (mtx.imag-mn.image)**3) / (v.imag**(3.0/2.0))))
+        res = ((((mtx.real - mn.real)**3).mean() / (v.real**(3.0 / 2.0))) +
+               ((1j * (mtx.imag - mn.image)**3) / (v.imag**(3.0 / 2.0))))
     else:
-        res = ((mtx.real - mn.real)**3).mean() / (v.real**(3.0/2.0))
+        res = ((mtx.real - mn.real)**3).mean() / (v.real**(3.0 / 2.0))
 
     return res
