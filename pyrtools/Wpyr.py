@@ -5,6 +5,7 @@ from .modulateFlip import modulateFlip
 from .maxPyrHt import maxPyrHt
 from .corrDn import corrDn
 from .upConv import upConv
+from .showIm import showIm
 from . import JBhelpers
 import numpy
 import matplotlib
@@ -22,7 +23,7 @@ class Wpyr(Lpyr):
         self.pyrType = 'wavelet'
 
         if len(args) > 0:
-            im = args[0]
+            im = numpy.array(args[0], dtype=numpy.float64)
         else:
             print("First argument (image) is required.")
             return
@@ -452,6 +453,10 @@ class Wpyr(Lpyr):
             # make position list positive, and allocate appropriate image:
             llpos = llpos - ((numpy.ones((nind,1)) * numpy.amin(llpos, axis=0)) + 1) + 1
             urpos = llpos + self.pyrSize
+
+            llpos = llpos.astype(numpy.int32)
+            urpos = urpos.astype(numpy.int32)
+
             d_im = numpy.ones((numpy.amax(urpos), numpy.amax(urpos))) * bg
         
             # paste bands into image, (im-r1)*(nshades-1)/(r2-r1) + 1.5

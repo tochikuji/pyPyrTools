@@ -73,7 +73,7 @@ class Lpyr(pyramid):
         self.pyr = []
         self.pyrSize = []
         pyrCtr = 0
-        im = numpy.array(self.image).astype(float)
+        im = numpy.array(self.image).astype(numpy.float64)
         if len(im.shape) == 1:
             im = im.reshape(im.shape[0], 1)
         los = {}

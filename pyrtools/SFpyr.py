@@ -14,7 +14,7 @@ class SFpyr(Spyr):
         self.pyrType = 'steerableFrequency'
 
         if len(args) > 0:
-            self.image = args[0]
+            self.image = numpy.array(args[0], dtype=numpy.float64)
         else:
             print("First argument (image) is required.")
             return
@@ -55,9 +55,9 @@ class SFpyr(Spyr):
         # steering stuff:
 
         if nbands % 2 == 0:
-            harmonics = numpy.array(list(range(nbands/2))) * 2 + 1
+            harmonics = numpy.array(list(range(int(nbands/2)))) * 2 + 1
         else:
-            harmonics = numpy.array(list(range((nbands-1)/2))) * 2
+            harmonics = numpy.array(list(range(int((nbands-1)/2)))) * 2
 
         steermtx = steer2HarmMtx(harmonics, numpy.pi *
                                  numpy.array(list(range(nbands)))/nbands, 'even')
@@ -65,7 +65,7 @@ class SFpyr(Spyr):
         #------------------------------------------------------
         
         dims = numpy.array(self.image.shape)
-        ctr = numpy.ceil((numpy.array(dims)+0.5)/2)
+        ctr = numpy.ceil((numpy.asarray(dims) + 0.5) / 2).astype(numpy.int32)
         
         (xramp, yramp) = numpy.meshgrid((numpy.array(list(range(1,dims[1]+1)))-ctr[1])/
                                      (dims[1]/2), 
@@ -136,8 +136,9 @@ class SFpyr(Spyr):
             ctr = numpy.ceil((dims+0.5)/2)
             lodims = numpy.ceil((dims-0.5)/2)
             loctr = numpy.ceil((lodims+0.5)/2)
-            lostart = ctr - loctr
-            loend = lostart + lodims
+
+            lostart = (ctr - loctr).astype(numpy.int32)
+            loend = (lostart + lodims).astype(numpy.int32)
 
             log_rad = log_rad[lostart[0]:loend[0], lostart[1]:loend[1]]
             angle = angle[lostart[0]:loend[0], lostart[1]:loend[1]]

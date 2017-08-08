@@ -16,7 +16,7 @@ class SCFpyr(SFpyr):
         self.pyrType = 'steerableFrequency'
 
         if len(args) > 0:
-            self.image = args[0]
+            self.image = numpy.array(args[0], dtype=numpy.float64)
         else:
             print("First argument (image) is required.")
             return
