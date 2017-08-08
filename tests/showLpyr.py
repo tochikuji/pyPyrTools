@@ -9,5 +9,8 @@ imgpath = sys.argv[1]
 img = Image.open(imgpath)
 img = numpy.asarray(img)
 
-pyr = pyrtools.Lpyr(img)
-pyr.showPyr()
+lpyr = pyrtools.Lpyr(img)
+lpyr.showPyr()
+
+spyr = pyrtools.SFpyr(img)
+spyr.showPyr()
