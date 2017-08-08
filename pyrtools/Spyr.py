@@ -22,7 +22,7 @@ class Spyr(pyramid):
     def __init__(self, *args):    # (image height, filter file, edges)
         self.pyrType = 'steerable'
         if len(args) > 0:
-            self.image = numpy.array(args[0])
+            self.image = numpy.array(args[0], dtype=numpy.float64)
         else:
             print("First argument (image) is required.")
             return
@@ -300,7 +300,7 @@ class Spyr(pyramid):
     
     #def showPyr(self, *args):
     def showPyr(self, prange = 'auto2', gap = 1, scale = 2, disp = 'qt'):
-        ht = self.spyrHt()
+        ht = int(self.spyrHt())
         nind = len(self.pyr)
         nbands = self.numBands()
 
@@ -372,7 +372,7 @@ class Spyr(pyramid):
         colormap = matplotlib.cm.Greys_r
 
         # compute positions of subbands
-        llpos = numpy.ones((nind,2));
+        llpos = numpy.ones((nind,2))
 
         if nbands == 2:
             ncols = 1
@@ -381,11 +381,12 @@ class Spyr(pyramid):
             ncols = int(numpy.ceil((nbands+1)/2))
             nrows = int(numpy.ceil(nbands/2))
 
-        a = numpy.array(list(range(1-nrows, 1)))
+        a = numpy.array(range(1-nrows, 0))
         b = numpy.zeros((1,ncols))[0]
         ab = numpy.concatenate((a,b))
         c = numpy.zeros((1,nrows))[0]
-        d = list(range(-1, -ncols-1, -1))
+        # d = list(range(-1, -ncols-1, -1))
+        d = list(range(-1, -ncols, -1))
         cd = numpy.concatenate((c,d))
         relpos = numpy.vstack((ab,cd)).T
         
@@ -401,7 +402,8 @@ class Spyr(pyramid):
             basepos = basepos + mvpos * sz
             if nbands < 5:         # to align edges
                 sz += gap * (ht-lnum)
-            llpos[ind1:ind1+nbands, :] = numpy.dot(relpos, numpy.diag(sz)) + ( numpy.ones((nbands,1)) * basepos )
+            llpos[ind1:ind1 + nbands, :] = numpy.dot(relpos, numpy.diag(sz)) +\
+                (numpy.ones((nbands, 2)) * basepos)
     
         # lowpass band
         sz = numpy.array(self.pyrSize[nind-1]) + gap
@@ -411,7 +413,8 @@ class Spyr(pyramid):
         # make position list positive, and allocate appropriate image:
         llpos = llpos - ((numpy.ones((nind,2)) * numpy.amin(llpos, axis=0)) + 1) + 1
         llpos[0,:] = numpy.array([1, 1])
-        urpos = llpos + self.pyrSize
+        llpos = llpos.astype(numpy.int32)
+        urpos = (llpos + self.pyrSize).astype(numpy.int32)
         d_im = numpy.zeros((numpy.amax(urpos), numpy.amax(urpos)))
         
         # paste bands into image, (im-r1)*(nshades-1)/(r2-r1) + 1.5

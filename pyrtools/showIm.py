@@ -90,5 +90,5 @@ def showIm(*args):
     if zoom != 1:
         img.thumbnail((width, height), Image.BICUBIC)
 
-    ax.imshow(img)
+    ax.imshow(img, cmap='gray')
     plt.show()
