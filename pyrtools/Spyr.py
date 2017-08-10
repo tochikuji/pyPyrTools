@@ -41,11 +41,10 @@ class Spyr(pyramid):
             elif args[2] == 'sp5Filters':
                 filters = sp5Filters()
             elif os.path.isfile(args[2]):
-                print("Filter files not supported yet")
-                return
+                raise NotImplementedError("Filter files not supported yet")
             else:
-                print("filter parameters value %s not supported" % (args[2]))
-                return
+                raise ValueError("filter parameters value %s not supported" %
+                                 (args[2]))
         else:
             filters = sp1Filters()
 
@@ -61,9 +60,8 @@ class Spyr(pyramid):
             if args[1] == 'auto':
                 ht = max_ht
             elif args[1] > max_ht:
-                print("Error: cannot build pyramid higher than %d levels." % (
-                    max_ht))
-                return
+                raise ValueError("cannot build pyramid higher than %d levels." %
+                                 max_ht)
             else:
                 ht = args[1]
         else:
@@ -156,7 +154,7 @@ class Spyr(pyramid):
             spHt = (len(self.pyrSize) - 2) / self.numBands()
         else:
             spHt = 0
-        return spHt
+        return int(spHt)
 
     def numBands(self):
         if len(self.pyrSize) == 2:
@@ -220,7 +218,7 @@ class Spyr(pyramid):
 
         #---------------------------------------------------------
 
-        maxLev = 2 + self.spyrHt()
+        maxLev = int(2 + self.spyrHt())
         if levs == 'all':
             levs = numpy.array(list(range(maxLev)))
         else:
@@ -281,9 +279,10 @@ class Spyr(pyramid):
             bandImageIdx = 1 + (((Nlevs - 1) - level) * Nbands)
             for band in range(Nbands - 1, -1, -1):
                 if bandImageIdx in reconList:
-                    filt = bfilts[:, (Nbands - 1) - band].reshape(bfiltsz,
-                                                                  bfiltsz,
-                                                                  order='F')
+                    ind = (Nbands - 1) - band
+                    filt = bfilts[:, ind].reshape(bfiltsz,
+                                                  bfiltsz,
+                                                  order='F')
 
                     recon = upConv(image=self.pyr[bandImageIdx],
                                    filt=filt, edges=edges,
