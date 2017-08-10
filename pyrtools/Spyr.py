@@ -48,6 +48,9 @@ class Spyr(pyramid):
         else:
             filters = sp1Filters()
 
+        # keep its own filter information
+        self.filters = filters
+
         harmonics = filters['harmonics']
         lo0filt = filters['lo0filt']
         hi0filt = filters['hi0filt']
@@ -191,7 +194,7 @@ class Spyr(pyramid):
                 print("filter %s not supported" % (args[0]))
                 return
         else:
-            filters = sp1Filters()
+            filters = self.filters
 
         lo0filt = filters['lo0filt']
         hi0filt = filters['hi0filt']
