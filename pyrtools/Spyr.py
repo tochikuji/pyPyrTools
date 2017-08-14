@@ -51,7 +51,7 @@ class Spyr(pyramid):
         # keep its own filter information
         self.filters = filters
 
-        harmonics = filters['harmonics']
+        # harmonics = filters['harmonics']
         lo0filt = filters['lo0filt']
         hi0filt = filters['hi0filt']
         lofilt = filters['lofilt']

@@ -57,25 +57,29 @@ class SCFpyr(SFpyr):
 
         #------------------------------------------------------
         # steering stuff:
-
-        if nbands % 2 == 0:
-            harmonics = numpy.array(list(range(nbands / 2))) * 2 + 1
-        else:
-            harmonics = numpy.array(list(range((nbands - 1) / 2))) * 2
-
-        steermtx = steer2HarmMtx(harmonics,
-                                 numpy.pi *
-                                 numpy.array(list(range(nbands))) / nbands,
-                                 'even')
+        #
+        # if nbands % 2 == 0:
+        #     harmonics = numpy.array(list(range(int(nbands / 2)))) * 2 + 1
+        # else:
+        #     # this might be buggy...
+        #     harmonics = numpy.array(list(range(int(nbands / 2)))) * 2
+        #
+        # steermtx = steer2HarmMtx(harmonics,
+        #                          numpy.pi *
+        #                          numpy.array(list(range(nbands))) / nbands,
+        #                          'even')
         #------------------------------------------------------
 
         dims = numpy.array(self.image.shape)
-        ctr = numpy.ceil((numpy.array(dims) + 0.5) / 2)
+        ctr = numpy.ceil((numpy.array(dims) + 0.5) / 2).astype(numpy.int32)
 
-        (xramp, yramp) = numpy.meshgrid((numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
-                                        (dims[1] / 2),
-                                        (numpy.array(list(range(1, dims[0] + 1))) - ctr[0]) /
-                                        (dims[0] / 2))
+        (xramp, yramp) = numpy.meshgrid(
+            (numpy.array(range(1, dims[1] + 1)) - ctr[1]) /
+            (dims[1] / 2.),
+            (numpy.array(range(1, dims[0] + 1)) - ctr[0]) /
+            (dims[0] / 2.)
+        )
+
         angle = numpy.arctan2(yramp, xramp)
         log_rad = numpy.sqrt(xramp**2 + yramp**2)
         log_rad[ctr[0] - 1, ctr[1] - 1] = log_rad[ctr[0] - 1, ctr[1] - 2]
@@ -142,11 +146,11 @@ class SCFpyr(SFpyr):
                 self.pyrSize.append(band.shape)
 
             dims = numpy.array(lodft.shape)
-            ctr = numpy.ceil((dims + 0.5) / 2)
-            lodims = numpy.ceil((dims - 0.5) / 2)
-            loctr = numpy.ceil((lodims + 0.5) / 2)
-            lostart = ctr - loctr
-            loend = lostart + lodims
+            ctr = numpy.ceil((dims + 0.5) / 2).astype(numpy.int32)
+            lodims = numpy.ceil((dims - 0.5) / 2).astype(numpy.int32)
+            loctr = numpy.ceil((lodims + 0.5) / 2).astype(numpy.int32)
+            lostart = (ctr - loctr).astype(numpy.int32)
+            loend = (lostart + lodims).astype(numpy.int32)
 
             log_rad = log_rad[lostart[0]:loend[0], lostart[1]:loend[1]]
             angle = angle[lostart[0]:loend[0], lostart[1]:loend[1]]
@@ -187,14 +191,14 @@ class SCFpyr(SFpyr):
 
         pind = self.pyrSize
         Nsc = int(numpy.log2(pind[0][0] / pind[-1][0]))
-        Nor = (len(pind) - 2) / Nsc
+        Nor = int((len(pind) - 2) / Nsc)
 
         pyrIdx = 1
         for nsc in range(Nsc):
             firstBnum = nsc * Nor + 2
             dims = pind[firstBnum][:]
-            ctr = (numpy.ceil((dims[0] + 0.5) / 2.0),
-                   numpy.ceil((dims[1] + 0.5) / 2.0))  # -1?
+            ctr = (numpy.ceil((dims[0] + 0.5) / 2.0).astype(numpy.int32),
+                   numpy.ceil((dims[1] + 0.5) / 2.0).astype(numpy.int32))  # -1?
             ang = mkAngle(dims, 0, ctr)
             ang[ctr[0] - 1, ctr[1] - 1] = -numpy.pi / 2.0
             for nor in range(Nor):

@@ -55,15 +55,15 @@ class SFpyr(Spyr):
 
         #------------------------------------------------------
         # steering stuff:
-
-        if nbands % 2 == 0:
-            harmonics = numpy.array(list(range(int(nbands / 2)))) * 2 + 1
-        else:
-            harmonics = numpy.array(list(range(int((nbands - 1) / 2)))) * 2
-
-        steermtx = steer2HarmMtx(harmonics, numpy.pi *
-                                 numpy.array(list(range(nbands))) / nbands, 'even')
-
+        #
+        # if nbands % 2 == 0:
+        #     harmonics = numpy.array(list(range(int(nbands / 2)))) * 2 + 1
+        # else:
+        #     harmonics = numpy.array(list(range(int((nbands - 1) / 2)))) * 2
+        #
+        # steermtx = steer2HarmMtx(harmonics, numpy.pi *
+        #                          numpy.array(list(range(nbands))) / nbands, 'even')
+        #
         #------------------------------------------------------
 
         dims = numpy.array(self.image.shape)
@@ -211,16 +211,16 @@ class SFpyr(Spyr):
             print("levs must be either a 1D numpy array or the string 'all'.")
             return
         else:
-            levs = numpy.array(levs)
+            levs = numpy.array(levs, dtype=numpy.int32)
 
         if isinstance(bands, str) and bands == 'all':
-            bands = numpy.array(list(range(nbands)))
+            bands = numpy.array(list(range(nbands)), dtype=numpy.int32)
         elif isinstance(bands, str):
             print(("Error: %s not valid for bands parameter." % (bands)))
             print("bands must be either a 1D numpy array or the string 'all'.")
             return
         else:
-            bands = numpy.array(bands)
+            bands = numpy.array(bands, dtype=numpy.int32)
 
         #-------------------------------------------------------------------
         # make list of dims and bounds
@@ -247,10 +247,11 @@ class SFpyr(Spyr):
         dims = numpy.array(self.pyrSize[0])
         ctr = numpy.ceil((dims + 0.5) / 2.0).astype(numpy.int32)
 
-        (xramp, yramp) = numpy.meshgrid((numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
-                                        (dims[1] / 2),
-                                        (numpy.array(list(range(1, dims[0] + 1))) - ctr[0]) /
-                                        (dims[0] / 2))
+        (xramp, yramp) = numpy.meshgrid(
+            (numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
+            (dims[1] / 2.),
+            (numpy.array(list(range(1, dims[0] + 1))) - ctr[0]) /
+            (dims[0] / 2.))
         angle = numpy.arctan2(yramp, xramp)
         log_rad = numpy.sqrt(xramp**2 + yramp**2)
         log_rad[ctr[0] - 1, ctr[1] - 1] = log_rad[ctr[0] - 1, ctr[1] - 2]
