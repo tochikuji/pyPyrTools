@@ -176,7 +176,7 @@ class SFpyr(Spyr):
             spHt = (len(self.pyrSize) - 2) / self.numBands()
         else:
             spHt = 0
-        return spHt
+        return int(spHt)
 
     def reconSFpyr(self, *args):
 
@@ -230,9 +230,9 @@ class SFpyr(Spyr):
             dims = numpy.array(self.pyrSize[dimIdx])
             if (dims[0], dims[1]) not in dimList:
                 dimList.append((dims[0], dims[1]))
-            ctr = numpy.ceil((dims + 0.5) / 2)
-            lodims = numpy.ceil((dims - 0.5) / 2)
-            loctr = numpy.ceil((lodims + 0.5) / 2)
+            ctr = numpy.ceil((dims + 0.5) / 2).astype(numpy.int32)
+            lodims = numpy.ceil((dims - 0.5) / 2).astype(numpy.int32)
+            loctr = numpy.ceil((lodims + 0.5) / 2).astype(numpy.int32)
             lostart = ctr - loctr
             loend = lostart + lodims
             bounds = (lostart[0], lostart[1], loend[0], loend[1])
@@ -245,7 +245,7 @@ class SFpyr(Spyr):
 
         # matlab code starts here
         dims = numpy.array(self.pyrSize[0])
-        ctr = numpy.ceil((dims + 0.5) / 2.0)
+        ctr = numpy.ceil((dims + 0.5) / 2.0).astype(numpy.int32)
 
         (xramp, yramp) = numpy.meshgrid((numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
                                         (dims[1] / 2),
@@ -313,6 +313,10 @@ class SFpyr(Spyr):
                            bounds2[0] + boundList[boundIdx][0] + diff[0],
                            bounds2[1] + boundList[boundIdx][1] + diff[1])
                 bounds1 = bound2tmp
+
+            bounds1 = list(map(int, bounds1))
+            bounds2 = list(map(int, bounds2))
+
             nlog_rad1 = log_rad[bounds1[0]:bounds1[2], bounds1[1]:bounds1[3]]
             nlog_rad2 = log_rad[bounds2[0]:bounds2[2], bounds2[1]:bounds2[3]]
             dims = dimList[idx]
