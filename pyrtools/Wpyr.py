@@ -1,3 +1,4 @@
+import copy
 from .Lpyr import Lpyr
 from .LB2idx import LB2idx
 from .namedFilter import namedFilter
@@ -18,36 +19,35 @@ class Wpyr(Lpyr):
     height = ''
 
     # constructor
-    def __init__(self, *args):    # (image, height, order, twidth)
+    def __init__(self, image, height=None, filt=None, edges=None):
         self.pyr = []
         self.pyrSize = []
+
         self.pyrType = 'wavelet'
 
-        if len(args) > 0:
-            im = numpy.array(args[0], dtype=numpy.float64)
-        else:
-            print("First argument (image) is required.")
-            return
+        im = numpy.asarray(image, dtype=numpy.float64)
+        self.image = copy.copy(im)
 
-        #------------------------------------------------
+        # ------------------------------------------------
         # defaults:
 
-        if len(args) > 2:
-            filt = args[2]
-        else:
+        if filt is None:
             filt = "qmf9"
+
         if isinstance(filt, str):
             filt = namedFilter(filt)
-
-        if len(filt.shape) != 1 and filt.shape[0] != 1 and filt.shape[1] != 1:
-            print("Error: filter should be 1D (i.e., a vector)");
-            return
-        hfilt = modulateFlip(filt)
-
-        if len(args) > 3:
-            edges = args[3]
         else:
+            filt = np.asarray(filt)
+            if len(filt.shape) != 1:
+                raise TypeError("filter must be a vector or a name of filter")
+
+        hfilt = modulateFlip(filt)
+        self.filt = filt
+
+        if edges is None:
             edges = "reflect1"
+
+        self.edges = edges
 
         # Stagger sampling if filter is odd-length:
         if filt.shape[0] % 2 == 0:
@@ -64,16 +64,19 @@ class Wpyr(Lpyr):
 
         max_ht = maxPyrHt(im.shape, filt.shape)
 
-        if len(args) > 1:
-            ht = args[1]
-            if ht == 'auto':
-                ht = max_ht
-            elif(ht > max_ht):
-                print("Error: cannot build pyramid higher than %d levels." % (max_ht))
-        else:
+        if height is None or height == 'auto':
             ht = max_ht
+        else:
+            ht = int(height)
+
+        if ht > max_ht:
+            raise ValueError(
+                "Error: cannot build pyramid higher than {} levels.".format(
+                    max_ht))
+
         ht = int(ht)
         self.height = ht + 1  # used with showPyr() method
+
         for lev in range(ht):
             if len(im.shape) == 1 or im.shape[1] == 1:
                 lolo = corrDn(image=im, filt=filt, edges=edges,
@@ -139,12 +142,12 @@ class Wpyr(Lpyr):
         if len(args) > 0:
             filt = args[0]
         else:
-            filt = 'qmf9'
+            filt = self.filt
 
         if len(args) > 1:
             edges = args[1]
         else:
-            edges = 'reflect1'
+            edges = self.edges
 
         if len(args) > 2:
             if not isinstance(args[2], str):
@@ -174,8 +177,10 @@ class Wpyr(Lpyr):
                 tmpLevs.append((maxLev - 1) - l)
             levs = numpy.array(tmpLevs)
             if (levs > maxLev).any():
-                print(
-                    "Error: level numbers must be in the range [0, %d]" % (maxLev))
+                raise RuntimeError(
+                    "Error: level numbers must be in the range [0, %d]" % (maxLev)
+                )
+
         allLevs = numpy.array(list(range(maxLev)))
 
         if isinstance(bands, str) and bands == "all":
@@ -187,7 +192,9 @@ class Wpyr(Lpyr):
         else:
             bands = numpy.array(bands)
             if (bands < 0).any() or (bands > 2).any():
-                print("Error: band numbers must be in the range [0,2].")
+                raise ValueError(
+                    "Error: band numbers must be in the range [0,2]."
+                )
 
         if isinstance(filt, str):
             filt = namedFilter(filt)

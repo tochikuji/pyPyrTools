@@ -12,21 +12,12 @@ class Gpyr(Lpyr):
     height = ''
 
     # constructor
-    def __init__(self, *args):    # (image, height, filter, edges)
+    def __init__(self, image, height=None, filt=None, edges=None):
         self.pyrType = 'Gaussian'
-        if len(args) < 1:
-            print("pyr = Gpyr(image, height, filter, edges)")
-            print("First argument (image) is required")
-            return
-        else:
-            self.image = args[0]
 
-        if len(args) > 2:
-            filt = args[2]
-            if not (filt.shape == 1).any():
-                print("Error: filt should be a 1D filter (i.e., a vector)")
-                return
-        else:
+        self.image = numpy.asarray(image, dtype=numpy.float64)
+
+        if filt is None:
             print("no filter set, so filter is binom5")
             filt = namedFilter('binom5')
             if self.image.shape[0] == 1:
@@ -34,24 +25,27 @@ class Gpyr(Lpyr):
             else:
                 filt = filt.reshape(5, 1)
 
+        if not (filt.shape == 1).any():
+            raise TypeError("filt must be a 1D filter (i.e. a vector)")
+
+        # store its own filter
+        self.filt = filt
+
         maxHeight = 1 + maxPyrHt(self.image.shape, filt.shape)
 
-        if len(args) > 1:
-            if args[1] is "auto":
-                self.height = maxHeight
-            else:
-                self.height = args[1]
-                if self.height > maxHeight:
-                    print(("Error: cannot build pyramid higher than %d levels"
-                           % (maxHeight)))
-                    return
-        else:
+        if height is None or height == 'auto':
             self.height = maxHeight
-
-        if len(args) > 3:
-            edges = args[3]
         else:
+            self.height = int(height)
+            if self.height > maxHeight:
+                raise ValueError(
+                    "cannot build pyramid higher than {} levels".format(
+                        maxHeight))
+
+        if edges is None:
             edges = "reflect1"
+
+        self.edges = edges
 
         # make pyramid
         self.pyr = []

@@ -11,47 +11,45 @@ class SFpyr(Spyr):
     edges = ''
 
     # constructor
-    def __init__(self, *args):    # (image, height, order, twidth)
+    def __init__(self, image, height=None, order=None, twidth=None):
         self.pyrType = 'steerableFrequency'
 
-        if len(args) > 0:
-            self.image = numpy.array(args[0], dtype=numpy.float64)
-        else:
-            print("First argument (image) is required.")
-            return
+        self.image = numpy.asarray(image, dtype=numpy.float64)
 
         #------------------------------------------------
         # defaults:
 
         max_ht = numpy.floor(numpy.log2(min(self.image.shape))) - 2
-        if len(args) > 1:
-            if(args[1] > max_ht):
-                print(("Error: cannot build pyramid higher than %d levels." % (max_ht)))
-            ht = args[1]
-        else:
-            ht = max_ht
-        ht = int(ht)
 
-        if len(args) > 2:
-            if args[2] > 15 or args[2] < 0:
-                print(
-                    "Warning: order must be an integer in the range [0,15]. Truncating.")
-                order = min(max(args[2], 0), 15)
-            else:
-                order = args[2]
+        if height is None or height == 'auto':
+            ht = max_ht
         else:
+            ht = int(height)
+
+        if ht > max_ht:
+            raise ValueError(
+                "Error: cannot build pyramid higher than {} levels.".format(
+                    max_ht))
+
+        ht = int(ht)
+        self.height = ht
+
+        if order is None:
             order = 3
+        else:
+            order = int(order)
 
         nbands = order + 1
 
-        if len(args) > 3:
-            if args[3] <= 0:
-                print("Warning: twidth must be positive. Setting to 1.")
-                twidth = 1
-            else:
-                twidth = args[3]
-        else:
+        self.order = order
+
+        if twidth is None:
             twidth = 1
+
+        if twidth < 0:
+            raise ValueError("twidth must be positive.")
+
+        self.twidth = twidth
 
         #------------------------------------------------------
         # steering stuff:

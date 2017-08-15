@@ -20,31 +20,29 @@ class Spyr(pyramid):
     edges = ''
 
     # constructor
-    def __init__(self, *args):    # (image height, filter file, edges)
+    # def __init__(self, *args):    # (image height, filter file, edges)
+    def __init__(self, image, height=None, filt=None, edges=None):
         self.pyrType = 'steerable'
-        if len(args) > 0:
-            self.image = numpy.array(args[0], dtype=numpy.float64)
-        else:
-            print("First argument (image) is required.")
-            return
+
+        self.image = numpy.asarray(image, dtype=numpy.float64)
 
         #------------------------------------------------
         # defaults:
 
-        if len(args) > 2:
-            if args[2] == 'sp0Filters':
+        if filt is not None:
+            if filt == 'sp0Filters':
                 filters = sp0Filters()
-            elif args[2] == 'sp1Filters':
+            elif filt == 'sp1Filters':
                 filters = sp1Filters()
-            elif args[2] == 'sp3Filters':
+            elif filt == 'sp3Filters':
                 filters = sp3Filters()
-            elif args[2] == 'sp5Filters':
+            elif filt == 'sp5Filters':
                 filters = sp5Filters()
-            elif os.path.isfile(args[2]):
+            elif os.path.isfile(filt):
                 raise NotImplementedError("Filter files not supported yet")
             else:
                 raise ValueError("filter parameters value %s not supported" %
-                                 (args[2]))
+                                 (filt))
         else:
             filters = sp1Filters()
 
@@ -59,21 +57,24 @@ class Spyr(pyramid):
         steermtx = filters['mtx']
 
         max_ht = maxPyrHt(self.image.shape, lofilt.shape)
-        if len(args) > 1:
-            if args[1] == 'auto':
-                ht = max_ht
-            elif args[1] > max_ht:
-                raise ValueError("cannot build pyramid higher than %d levels." %
-                                 max_ht)
-            else:
-                ht = args[1]
-        else:
-            ht = max_ht
 
-        if len(args) > 3:
-            edges = args[3]
+        if height is None:
+            ht = max_ht
         else:
+            ht = height
+
+        if ht > max_ht:
+            raise ValueError(
+                "Error: cannot build pyramid higher than {} levels.".format(
+                    max_ht))
+
+        ht = int(ht)
+        self.height = ht
+
+        if edges is None:
             edges = 'reflect1'
+
+        self.edges = edges
 
         #------------------------------------------------------
 
@@ -207,7 +208,7 @@ class Spyr(pyramid):
         if len(args) > 1:
             edges = args[1]
         else:
-            edges = 'reflect1'
+            edges = self.edges
 
         if len(args) > 2:
             levs = args[2]

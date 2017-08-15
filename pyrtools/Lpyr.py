@@ -16,59 +16,58 @@ class Lpyr(pyramid):
     height = ''
 
     # constructor
-    def __init__(self, *args):    # (image, height, filter1, filter2, edges)
+    # def __init__(self, *args):    # (image, height, filter1, filter2, edges)
+    def __init__(self, image, height, filt1=None, filt2=None, edges=None):
         self.pyrType = 'Laplacian'
-        if len(args) > 0:
-            self.image = args[0]
-        else:
-            print("pyr = Lpyr(image, height, filter1, filter2, edges)")
-            print("First argument (image) is required")
-            return
 
-        if len(args) > 2:
-            filt1 = args[2]
-            if isinstance(filt1, str):
-                filt1 = namedFilter(filt1)
-            elif len(filt1.shape) != 1 and (filt1.shape[0] != 1 and
-                                            filt1.shape[1] != 1):
-                print("Error: filter1 should be a 1D filter (i.e., a vector)")
-                return
-        else:
+        self.image = numpy.asarray(image, dtype=numpy.float64)
+
+        if filt1 is None:
             filt1 = namedFilter('binom5')
+        elif isinstance(filt1, str):
+            filt1 = namedFilter(filt1)
+        else:
+            filt1 = numpy.asarray(filt1)
+            if len(filt1.shape) != 1 and (filt1.shape[0] != 1 and
+                                          filt1.shape[1] != 1):
+                raise TypeError('filter1 must be a vector or name of filters')
+
         if len(filt1.shape) == 1:
             filt1 = filt1.reshape(1, len(filt1))
         elif self.image.shape[0] == 1:
             filt1 = filt1.reshape(filt1.shape[1], filt1.shape[0])
 
-        if len(args) > 3:
-            filt2 = args[3]
-            if isinstance(filt2, str):
-                filt2 = namedFilter(filt2)
-            elif len(filt2.shape) != 1 and (filt2.shape[0] != 1 and
-                                            filt2.shape[1] != 1):
-                print("Error: filter2 should be a 1D filter (i.e., a vector)")
-                return
-        else:
+        if filt2 is None:
             filt2 = filt1
+        elif isinstance(filt2, str):
+            filt2 = namedFilter(filt2)
+        else:
+            filt2 = numpy.asarray(filt2)
+            if len(filt2.shape) != 1 and (filt2.shape[0] != 1 and
+                                          filt2.shape[1] != 1):
+                raise TypeError('filter1 must be a vector or name of filters')
+
+        self.filt1 = filt1
+        self.filt2 = filt2
 
         maxHeight = 1 + maxPyrHt(self.image.shape, filt1.shape)
 
-        if len(args) > 1:
-            if args[1] is "auto":
-                self.height = maxHeight
-            else:
-                self.height = args[1]
-                if self.height > maxHeight:
-                    print(("Error: cannot build pyramid higher than %d levels"
-                           % maxHeight))
-                    return
-        else:
+        if height is None or height == 'auto':
             self.height = maxHeight
-
-        if len(args) > 4:
-            edges = args[4]
         else:
+            self.height = int(height)
+            if self.height > maxHeight:
+                raise ValueError(
+                    "Error: cannot build pyramid higher than %d levels"
+                    % maxHeight
+                )
+
+        self.height = int(self.height)
+
+        if edges is None:
             edges = "reflect1"
+
+        self.edges = edges
 
         # make pyramid
         self.pyr = []
@@ -161,7 +160,7 @@ class Lpyr(pyramid):
         if len(args) > 1:
             filt2 = args[1]
         else:
-            filt2 = 'binom5'
+            filt2 = self.filt2
 
         if len(args) > 2:
             edges = args[2]
