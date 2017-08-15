@@ -41,10 +41,6 @@ class SCFpyr(SFpyr):
         else:
             order = int(order)
 
-        # if order % 2 == 0:
-        #     raise ValueError("order (number of orientations) could not be "
-        #                      "even-number because of unknown bug.")
-
         nbands = order + 1
 
         self.order = order
