@@ -239,7 +239,7 @@ class SFpyr(Spyr):
             bounds = (lostart[0], lostart[1], loend[0], loend[1])
             if bounds not in boundList:
                 boundList.append(bounds)
-        boundList.append((0.0, 0.0, dimList[len(dimList) - 1][0],
+        boundList.append((0, 0, dimList[len(dimList) - 1][0],
                           dimList[len(dimList) - 1][1]))
         dimList.append((dimList[len(dimList) - 1][0],
                         dimList[len(dimList) - 1][1]))
