@@ -69,10 +69,11 @@ class SFpyr(Spyr):
         dims = numpy.array(self.image.shape)
         ctr = numpy.ceil((numpy.asarray(dims) + 0.5) / 2).astype(numpy.int32)
 
-        (xramp, yramp) = numpy.meshgrid((numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
-                                        (dims[1] / 2),
-                                        (numpy.array(list(range(1, dims[0] + 1))) - ctr[0]) /
-                                        (dims[0] / 2))
+        (xramp, yramp) = numpy.meshgrid(
+            (numpy.array(list(range(1, dims[1] + 1))) - ctr[1]) /
+            (dims[1] / 2),
+            (numpy.array(list(range(1, dims[0] + 1))) - ctr[0]) /
+            (dims[0] / 2))
         angle = numpy.arctan2(yramp, xramp)
         log_rad = numpy.sqrt(xramp**2 + yramp**2)
         log_rad[ctr[0] - 1, ctr[1] - 1] = log_rad[ctr[0] - 1, ctr[1] - 2]

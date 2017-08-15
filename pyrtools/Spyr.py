@@ -321,7 +321,7 @@ class Spyr(pyramid):
             for lnum in range(1, ht + 1):
                 for bnum in range(nbands):
                     idx = pyPyrUtils.LB2idx(lnum, bnum, ht + 2, nbands)
-                    band = self.band(idx) / (numpy.power(scale, lnum))
+                    band = int(self.band(idx) / (numpy.power(scale, lnum)))
                     prange[(lnum - 1) * nbands + bnum +
                            1] = numpy.power(scale, lnum - 1)
                     bmn = numpy.amin(band)
