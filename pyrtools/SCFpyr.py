@@ -41,10 +41,6 @@ class SCFpyr(SFpyr):
         else:
             order = int(order)
 
-        if order % 2 == 0:
-            raise ValueError("order (number of orientations) could not be "
-                             "even-number because of unknown bug.")
-
         nbands = order + 1
 
         self.order = order
@@ -141,7 +137,7 @@ class SCFpyr(SFpyr):
                                     Xcosn[0] + numpy.pi * b / nbands,
                                     Xcosn[1] - Xcosn[0], 0)
                 anglemask = anglemask.reshape(lodft.shape[0], lodft.shape[1])
-                banddft = (cmath.sqrt(-1)**order) * lodft * anglemask * himask
+                banddft = (cmath.sqrt(-1)**order) * lodft * anglemask * himask * (-1+order%2*2)
                 band = numpy.negative(numpy.fft.ifft2(
                     numpy.fft.ifftshift(banddft)))
                 self.pyr.append(band.copy())
