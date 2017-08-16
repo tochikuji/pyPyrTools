@@ -137,7 +137,7 @@ class SCFpyr(SFpyr):
                                     Xcosn[0] + numpy.pi * b / nbands,
                                     Xcosn[1] - Xcosn[0], 0)
                 anglemask = anglemask.reshape(lodft.shape[0], lodft.shape[1])
-                banddft = (cmath.sqrt(-1)**order) * lodft * anglemask * himask * (-1+order%2*2)
+                banddft = (-1 * (-1j)**order) * lodft * anglemask * himask
                 band = numpy.negative(numpy.fft.ifft2(
                     numpy.fft.ifftshift(banddft)))
                 self.pyr.append(band.copy())
